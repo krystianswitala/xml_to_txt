@@ -2,6 +2,7 @@
 
 const XML_FILE_NAME = '36779.xml';
 const TXT_FILE_NAME = '36779.txt';
+const FTP_URL = 'ftp://user:pass@server.com/';
 
 /**
  * Załadowanie XML-a z pliku
@@ -37,6 +38,23 @@ function xmlToTxtConversion(SimpleXMLElement $xmlElem): string {
 }
 
 /**
+ * Wysłanie danych na serwer FTP
+ * @param string $url
+ * @param string $content
+ * @return bool
+ */
+function exportToFtp(string $url, string &$content): bool {
+    $fp = fopen($url, "w");
+    if ($fp === false) {
+        return false;
+    }
+
+    $writeRes = fwrite($fp, $content);
+    $closeRes = fclose($fp);
+    return ($writeRes === false || $closeRes === false) ? false : true;
+}
+
+/**
  * Funkcja główna
  */
 function main() {
@@ -47,8 +65,9 @@ function main() {
         $txtStr = xmlToTxtConversion($xmlElement);
         var_dump($txtStr);
 
-        // Zapis danych
-        file_put_contents(TXT_FILE_NAME, $txtStr);
+        // Zapis danych...
+        file_put_contents(TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
+        exportToFtp(FTP_URL.TXT_FILE_NAME, $txtStr); // ... na serwer FTP
     }
 }
 
