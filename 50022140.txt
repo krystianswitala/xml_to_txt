@@ -1,0 +1,52 @@
+###AFS_VORGANGIMPORT#
+###ANREDE:#
+###VORNAME:BlaBla#
+###NAME:Heinz#
+###STRASSE:ZumBeispier 8#
+###ORT:Niedersachsen#
+###PLZ:29378#
+###TELEFON:01773200919#
+###LAND:DE#
+###FIRMA:#
+###TELEFAX:#
+###LIEFERANSCHRIFT:
+BlaBla
+Heinz
+ZumBeispier 8
+29378 Niedersachsen
+DE
+Telefon: 01234567#
+###POS_NR:1#
+###POS_ARTIKELBE:Deckprofil Rand A2, 60 x 2000 mm, 16mm#
+###POS_ARTIKELNR:3441063#
+###POS_EPREIS:16,64#
+###POS_GPREIS:99,83#
+###POS_ANZAHL:6#
+###POS_RABATT:0,0#
+###POS_NR:3#
+###POS_ARTIKELBE:Schraubprofil Mitte A1, 60 x 2000 mm, 16mm#
+###POS_ARTIKELNR:3441163#
+###POS_EPREIS:19,5#
+###POS_GPREIS:19,5#
+###POS_ANZAHL:1#
+###POS_RABATT:0,0#
+###POS_NR:5#
+###POS_ARTIKELBE:Alu-Universal-Profil 2000 mm für Stegdoppelplatten ab 3 mm#
+###POS_ARTIKELNR:3445402#
+###POS_EPREIS:15,8#
+###POS_GPREIS:47,39#
+###POS_ANZAHL:3#
+###POS_RABATT:0,0#
+###POS_NR:7#
+###POS_ARTIKELBE:Polycarbonat-Verlegesystem U-Profil, 16 mm, 6000 mm#
+###POS_ARTIKELNR:3440195#
+###POS_EPREIS:18,49#
+###POS_GPREIS:18,49#
+###POS_ANZAHL:1#
+###POS_RABATT:0,0#
+###VERSAND:PayPal#
+###BEMERKUNG:1#
+###BESTELLNUMMER:50022140#
+###EMAIL:vgr61@t-online.de#
+###STEUER:2#
+###VERSANDKOSTEN:41,93#
