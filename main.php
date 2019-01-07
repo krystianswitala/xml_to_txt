@@ -43,7 +43,7 @@ function xmlToTxtConversion(SimpleXMLElement $xmlElem): string {
  * @param string $content
  * @return bool
  */
-function exportToFtp(string $url, string &$content): bool {
+function exportToFtp(string $url, string $content): bool {
     $fp = fopen($url, "w");
     if ($fp === false) {
         return false;
@@ -66,8 +66,11 @@ function main() {
         var_dump($txtStr);
 
         // Zapis danych...
-        file_put_contents(TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
-        exportToFtp(FTP_URL.TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+        @file_put_contents(TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
+        @exportToFtp(FTP_URL.TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+
+        // Kasowanie pliku wynikowego
+//         @unlink(TXT_FILE_NAME);
     }
 }
 
