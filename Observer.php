@@ -65,9 +65,9 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $xmlObject = new Varien_Simplexml_Config($result->toXml());
 
         // generate unique filename
-        $destinationFolder = Mage::getBaseDir('media') . DS . 'webforms' . DS . 'xml';
-        $xmlFilename = $destinationFolder . DS . $result->getId().'.xml';
-        $txtFilename = $destinationFolder . DS . $result->getId().'.txt';
+        $destinationFolder =  '/tmp/magento'; // Mage::getBaseDir('media') . DS . 'webforms' . DS . 'xml';
+        $xmlFilename = $destinationFolder . '/' . $result->getId().'.xml'; // $destinationFolder . DS . $result->getId().'.xml';
+        $txtFilename = $destinationFolder . '/' . $result->getId().'.txt'; // $destinationFolder . DS . $result->getId().'.txt';
 
         // create folder
         if (!(@is_dir($destinationFolder) || @mkdir($destinationFolder, 0777, true))) {

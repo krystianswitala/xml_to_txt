@@ -69,10 +69,12 @@ class XmlToTxtConverter {
 
             // Zapis danych...
             @file_put_contents(XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
-            $conv->exportToFtp(XmlToTxtConverter::FTP_URL . XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+//             $conv->exportToFtp(XmlToTxtConverter::FTP_URL . XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
 
             // Kasowanie pliku wynikowego
 //             @unlink(XmlToTxtConverter::TXT_FILE_NAME);
+
+            echo '/tmp/' . 'filename.txt';
         }
     }
 }
