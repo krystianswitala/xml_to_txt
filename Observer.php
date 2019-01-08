@@ -78,20 +78,20 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $xmlObject->getNode()->asNiceXml($xmlFilename);
 
         // Ponowne ładowanie pliku XML
-        $xmlElement = loadXMLFile($xmlFilename);
+        $xmlElement = $this->loadXMLFile($xmlFilename);
         unlink($xmlFilename); // Usunięcie niepotrzebnego już pliku XML
         if ($xmlElement == null) {
             throw new Exception("File '{$xmlFilename}' not exist.");
         }
 
         // Konwersja z XML do TXT
-        $txtContent = xmlToTxtConversion($xmlElement);
+        $txtContent = $this->xmlToTxtConversion($xmlElement);
 
         // Zapis danych...
-        if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
+        if ($this->file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
             throw new Exception("Unable to save data to file '{$txtFilename}'.");
         }
-//         if (exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
+//         if ($this->exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
 //             throw new Exception("Unable to send data to the FTP server.");
 //         }
     }
