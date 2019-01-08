@@ -10,7 +10,7 @@ class XmlToTxtConverter {
      * @param string $fileName nazwa pliku
      * @return SimpleXMLElement
      */
-    private function loadXMLFile(string $fileName): SimpleXMLElement {
+    private function loadXMLFile($fileName) {
         if (file_exists($fileName)) {
             return simplexml_load_file($fileName);
         } else {
@@ -23,7 +23,7 @@ class XmlToTxtConverter {
      * @param SimpleXMLElement $xmlElem
      * @return string
      */
-    private function xmlToTxtConversion(SimpleXMLElement $xmlElem): string {
+    private function xmlToTxtConversion(SimpleXMLElement $xmlElem) {
         $txtRes  = '###HIDDEN_TITLE:'.$xmlElem->hidden_title."#\r\n";
         $txtRes .= '###NAME:'.$xmlElem->name."#\r\n";
         $txtRes .= '###NACHNAME:'.$xmlElem->nachname."#\r\n";
@@ -44,7 +44,7 @@ class XmlToTxtConverter {
      * @param string $content
      * @return bool
      */
-    private function exportToFtp(string $url, string $content): bool {
+    private function exportToFtp($url, $content) {
         $fp = fopen($url, "w");
         if ($fp === false) {
             return false;
