@@ -7,8 +7,8 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
      * @return SimpleXMLElement
      */
     private function loadXMLFile($fileName) {
-        if (@file_exists($fileName)) {
-            return @simplexml_load_file($fileName);
+        if (file_exists($fileName)) {
+            return simplexml_load_file($fileName);
         } else {
             return null;
         }
@@ -41,13 +41,13 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
      * @return bool
      */
     private function exportToFtp($url, $content) {
-        $fp = @fopen($url, "w");
+        $fp = fopen($url, "w");
         if ($fp === false) {
             return false;
         }
 
-        $writeRes = @fwrite($fp, $content);
-        $closeRes = @fclose($fp);
+        $writeRes = fwrite($fp, $content);
+        $closeRes = fclose($fp);
         return ($writeRes === false || $closeRes === false) ? false : true;
     }
 
@@ -70,7 +70,7 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $txtFilename = $destinationFolder . '/' . $result->getId().'.txt'; // $destinationFolder . DS . $result->getId().'.txt';
 
         // create folder
-        if (!(@is_dir($destinationFolder) || @mkdir($destinationFolder, 0777, true))) {
+        if (!(is_dir($destinationFolder) || mkdir($destinationFolder, 0777, true))) {
             throw new Exception("Unable to create directory '{$destinationFolder}'.");
         }
 
@@ -79,7 +79,7 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
 
         // Ponowne ładowanie pliku XML
         $xmlElement = loadXMLFile($xmlFilename);
-        @unlink($xmlFilename); // Usunięcie niepotrzebnego już pliku XML
+        unlink($xmlFilename); // Usunięcie niepotrzebnego już pliku XML
         if ($xmlElement == null) {
             throw new Exception("File '{$xmlFilename}' not exist.");
         }
@@ -88,7 +88,7 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $txtContent = xmlToTxtConversion($xmlElement);
 
         // Zapis danych...
-        if (@file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
+        if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
             throw new Exception("Unable to save data to file '{$txtFilename}'.");
         }
 //         if (exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
