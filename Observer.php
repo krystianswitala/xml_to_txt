@@ -51,6 +51,11 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         return ($writeRes === false || $closeRes === false) ? false : true;
     }
 
+    /**
+     * Eksport do XML
+     * @param unknown $observer
+     * @throws Exception
+     */
     public function exportXML($observer){
         if(!Mage::getStoreConfig('webforms/proccessresult/enable')) return;
 
@@ -65,9 +70,9 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $xmlObject = new Varien_Simplexml_Config($result->toXml());
 
         // generate unique filename
-        $destinationFolder =  '/tmp/magento'; // Mage::getBaseDir('media') . DS . 'webforms' . DS . 'xml';
-        $xmlFilename = $destinationFolder . '/' . $result->getId().'.xml'; // $destinationFolder . DS . $result->getId().'.xml';
-        $txtFilename = $destinationFolder . '/' . $result->getId().'.txt'; // $destinationFolder . DS . $result->getId().'.txt';
+        $destinationFolder =  Mage::getBaseDir('media') . DS . 'webforms' . DS . 'xml';
+        $xmlFilename = $destinationFolder . DS . $result->getId().'.xml';
+        $txtFilename = $destinationFolder . DS . $result->getId().'.txt';
 
         // create folder
         if (!(is_dir($destinationFolder) || mkdir($destinationFolder, 0777, true))) {
@@ -88,7 +93,7 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $txtContent = $this->xmlToTxtConversion($xmlElement);
 
         // Zapis danych...
-        if ($this->file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
+        if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
             throw new Exception("Unable to save data to file '{$txtFilename}'.");
         }
 //         if ($this->exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
