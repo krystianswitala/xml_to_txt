@@ -3,7 +3,7 @@
 class XmlToTxtConverter {
     const XML_FILE_NAME = '36779.xml';
     const TXT_FILE_NAME = '36779.txt';
-    const FTP_URL = 'ftp://user:pass@server.com/';
+    const FTP_URL = 'ftp://krystianswitala:***@cba.pl/krystianswitala.cba.pl/';
 
     /**
      * Załadowanie XML-a z pliku
@@ -45,6 +45,10 @@ class XmlToTxtConverter {
      * @return bool
      */
     private function exportToFtp(string $url, string $content): bool {
+        if (file_exists($url)) {
+            unlink($url);
+        }
+
         $fp = fopen($url, "w");
         if ($fp === false) {
             return false;
@@ -54,6 +58,33 @@ class XmlToTxtConverter {
         $closeRes = fclose($fp);
         return ($writeRes === false || $closeRes === false) ? false : true;
     }
+
+    /**
+     * Wysłanie danych na serwer FTP
+     * @param string $ftpServer
+     * @param string $ftpUser
+     * @param string $ftpPass
+     * @param string $fileName
+     * @param string $content
+     * @return bool
+     */
+//     private function exportToFtp($ftpServer, $ftpUser, $ftpPass, $fileName, $content) {
+//         $conn = ftp_connect($ftpServer);
+//         $loginRes = ftp_login($conn, $ftpUser, $ftpPass);
+//         if (!$conn || !$loginRes) {
+//             return false;
+//         }
+
+//         $upload = ftp_put($conn, 'krystianswitala.cba.pl/'.$fileName, $fileName, FTP_BINARY);
+//         if (!$upload) {
+//             return false;
+//         }
+
+//         ftp_close($conn);
+
+//         return true;
+//     }
+
 
     /**
      * Funkcja główna
