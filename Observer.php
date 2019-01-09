@@ -41,6 +41,10 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
      * @return bool
      */
     private function exportToFtp($url, $content) {
+        if (file_exists($url)) {
+            unlink($url);
+        }
+
         $fp = fopen($url, "w");
         if ($fp === false) {
             return false;
@@ -93,12 +97,12 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         $txtContent = $this->xmlToTxtConversion($xmlElement);
 
         // Zapis danych...
-        if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
-            throw new Exception("Unable to save data to file '{$txtFilename}'.");
-        }
-//         if ($this->exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
-//             throw new Exception("Unable to send data to the FTP server.");
+//         if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
+//             throw new Exception("Unable to save data to file '{$txtFilename}'.");
 //         }
+        if ($this->exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
+            throw new Exception("Unable to send data to the FTP server.");
+        }
     }
 
 }

@@ -42,6 +42,27 @@ class XmlToTxtConverter {
 
     /**
      * Wysłanie danych na serwer FTP
+     * @param string $url
+     * @param string $content
+     * @return bool
+     */
+    private function exportToFtp($url, $content) {
+        if (file_exists($url)) {
+            unlink($url);
+        }
+
+        $fp = fopen($url, "w");
+        if ($fp === false) {
+            return false;
+        }
+
+        $writeRes = fwrite($fp, $content);
+        $closeRes = fclose($fp);
+        return ($writeRes === false || $closeRes === false) ? false : true;
+    }
+
+    /**
+     * Wysłanie danych na serwer FTP
      * @param string $ftpServer
      * @param string $ftpUser
      * @param string $ftpPass
@@ -49,22 +70,22 @@ class XmlToTxtConverter {
      * @param string $content
      * @return bool
      */
-    private function exportToFtp($ftpServer, $ftpUser, $ftpPass, $fileName, $content) {
-        $conn = ftp_connect($ftpServer);
-        $loginRes = ftp_login($conn, $ftpUser, $ftpPass);
-        if (!$conn || !$loginRes) {
-            return false;
-        }
+//     private function exportToFtp($ftpServer, $ftpUser, $ftpPass, $fileName, $content) {
+//         $conn = ftp_connect($ftpServer);
+//         $loginRes = ftp_login($conn, $ftpUser, $ftpPass);
+//         if (!$conn || !$loginRes) {
+//             return false;
+//         }
 
-        $upload = ftp_put($conn, 'krystianswitala.cba.pl/'.$fileName, $fileName, FTP_BINARY);
-        if (!$upload) {
-            return false;
-        }
+//         $upload = ftp_put($conn, 'krystianswitala.cba.pl/'.$fileName, $fileName, FTP_BINARY);
+//         if (!$upload) {
+//             return false;
+//         }
 
-        ftp_close($conn);
+//         ftp_close($conn);
 
-        return true;
-    }
+//         return true;
+//     }
 
     /**
      * Funkcja główna
@@ -80,7 +101,8 @@ class XmlToTxtConverter {
 
             // Zapis danych...
             @file_put_contents(XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
-            $conv->exportToFtp(XmlToTxtConverter::FTP_SERVER, XmlToTxtConverter::FTP_USER, XmlToTxtConverter::FTP_PASS, XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+//             $conv->exportToFtp(XmlToTxtConverter::FTP_SERVER, XmlToTxtConverter::FTP_USER, XmlToTxtConverter::FTP_PASS, XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+            $conv->exportToFtp('ftp://krystianswitala:***@cba.pl/krystianswitala.cba.pl/'.XmlToTxtConverter::TXT_FILE_NAME, $txtStr);
 
             // Kasowanie pliku wynikowego
 //             @unlink(XmlToTxtConverter::TXT_FILE_NAME);
