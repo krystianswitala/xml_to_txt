@@ -12,4 +12,4 @@ $sheet->setCellValue('B1', 128);
 $sheet->setCellValue('C1', 256);
 
 $writer = new Xls($spreadsheet);
-$writer->save('hello world.xls');
+@$writer->save('hello world.xls');
