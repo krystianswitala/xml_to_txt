@@ -1,4 +1,10 @@
 <?php
+
+require './vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 class VladimirPopov_WebFormsProccessResult_Model_Observer {
 
     /**
@@ -15,44 +21,53 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
     }
 
     /**
-     * Konwersja z formatu XML do TXT
+     * Konwersja i zapis do pliku XLS
      * @param SimpleXMLElement $xmlElem
-     * @return string
      */
-    private function xmlToTxtConversion(SimpleXMLElement $xmlElem) {
-        $txtRes  = '###HIDDEN_TITLE:'.$xmlElem->hidden_title."#\r\n";
-        $txtRes .= '###NAME:'.$xmlElem->name."#\r\n";
-        $txtRes .= '###NACHNAME:'.$xmlElem->nachname."#\r\n";
-        $txtRes .= '###STRASSE:'.$xmlElem->strasse."#\r\n";
-        $txtRes .= '###PLZ:'.$xmlElem->plz."#\r\n";
-        $txtRes .= '###CITY:'.$xmlElem->city."#\r\n";
-        $txtRes .= '###PHONE:'.$xmlElem->phone."#\r\n";
-        $txtRes .= '###EMAIL:'.$xmlElem->email."#\r\n";
-        $txtRes .= '###BEMERKUNGEN:'.$xmlElem->bemerkungen."#\r\n";
-        $txtRes .= '###BEDARF:'.$xmlElem->bedarf."#\r\n";
-        $txtRes .= '###HIDDEN_URL:'.$xmlElem->hidden_url."#\r\n";
-        return $txtRes;
-    }
+    private function exportToXlsFile(SimpleXMLElement $xmlElem, $fileName) {
+        $spreadsheet = new Spreadsheet();
 
-    /**
-     * Wysłanie danych na serwer FTP
-     * @param string $url
-     * @param string $content
-     * @return bool
-     */
-    private function exportToFtp($url, $content) {
-        if (file_exists($url)) {
-            unlink($url);
-        }
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle("Web form data");
 
-        $fp = fopen($url, "w");
-        if ($fp === false) {
-            return false;
-        }
+        $sheet->setCellValue("A1", "HIDDEN_TITLE");
+        $sheet->setCellValue("A2", $xmlElem->hidden_title);
+        $sheet->setCellValue("B1", "NAME");
+        $sheet->setCellValue("B2", $xmlElem->name);
+        $sheet->setCellValue("C1", "NACHNAME");
+        $sheet->setCellValue("C2", $xmlElem->nachname);
+        $sheet->setCellValue("D1", "STRASSE");
+        $sheet->setCellValue("D2", $xmlElem->strasse);
+        $sheet->setCellValue("E1", "PLZ");
+        $sheet->setCellValue("E2", $xmlElem->plz);
+        $sheet->setCellValue("F1", "CITY");
+        $sheet->setCellValue("F2", $xmlElem->city);
+        $sheet->setCellValue("G1", "PHONE");
+        $sheet->setCellValue("G2", $xmlElem->phone);
+        $sheet->setCellValue("H1", "EMAIL");
+        $sheet->setCellValue("H2", $xmlElem->email);
+        $sheet->setCellValue("I1", "BEMERKUNGEN");
+        $sheet->setCellValue("I2", $xmlElem->bemerkungen);
+        $sheet->setCellValue("J1", "BEDARF");
+        $sheet->setCellValue("J2", $xmlElem->bedarf);
+        $sheet->setCellValue("K1", "HIDDEN_URL");
+        $sheet->setCellValue("K2", $xmlElem->hidden_url);
 
-        $writeRes = fwrite($fp, $content);
-        $closeRes = fclose($fp);
-        return ($writeRes === false || $closeRes === false) ? false : true;
+        $sheet->getColumnDimension("A")->setAutoSize(true);
+        $sheet->getColumnDimension("B")->setAutoSize(true);
+        $sheet->getColumnDimension("C")->setAutoSize(true);
+        $sheet->getColumnDimension("D")->setAutoSize(true);
+        $sheet->getColumnDimension("E")->setAutoSize(true);
+        $sheet->getColumnDimension("F")->setAutoSize(true);
+        $sheet->getColumnDimension("G")->setAutoSize(true);
+        $sheet->getColumnDimension("H")->setAutoSize(true);
+        $sheet->getColumnDimension("I")->setAutoSize(true);
+        $sheet->getColumnDimension("J")->setAutoSize(true);
+        $sheet->getColumnDimension("K")->setAutoSize(true);
+
+        $writer = new Xls($spreadsheet);
+        @$writer->save($fileName);
+
     }
 
     /**
@@ -76,7 +91,7 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
         // generate unique filename
         $destinationFolder =  Mage::getBaseDir('media') . DS . 'webforms' . DS . 'xml';
         $xmlFilename = $destinationFolder . DS . $result->getId().'.xml';
-        $txtFilename = $destinationFolder . DS . $result->getId().'.txt';
+        $xlsFilename = $destinationFolder . DS . $result->getId().'.xls';
 
         // create folder
         if (!(is_dir($destinationFolder) || mkdir($destinationFolder, 0777, true))) {
@@ -93,16 +108,8 @@ class VladimirPopov_WebFormsProccessResult_Model_Observer {
             throw new Exception("File '{$xmlFilename}' not exist.");
         }
 
-        // Konwersja z XML do TXT
-        $txtContent = $this->xmlToTxtConversion($xmlElement);
-
-        // Zapis danych...
-//         if (file_put_contents($txtFilename, $txtContent) == false) { // ... do pliku na lokalnym dysku
-//             throw new Exception("Unable to save data to file '{$txtFilename}'.");
-//         }
-        if ($this->exportToFtp('ftp://user:pass@server.com/' . $txtFilename, $txtContent) == false) { // ... na serwer FTP
-            throw new Exception("Unable to send data to the FTP server.");
-        }
+        // Konwersja z XML do XLS
+        $this->exportToXlsFile($xmlElement, $xlsFilename);
     }
 
 }

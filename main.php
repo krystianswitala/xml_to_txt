@@ -1,5 +1,10 @@
 <?php
 
+require './vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+
 class XmlToTxtConverter {
     const XML_FILE_NAME = '36779.xml';
     const TXT_FILE_NAME = '36779.txt';
@@ -41,6 +46,56 @@ class XmlToTxtConverter {
     }
 
     /**
+     * Konwersja i zapis do pliku XLS
+     * @param SimpleXMLElement $xmlElem
+     */
+    private function exportToXlsFile(SimpleXMLElement $xmlElem, $fileName) {
+        $spreadsheet = new Spreadsheet();
+
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle("Web form data");
+
+        $sheet->setCellValue("A1", "HIDDEN_TITLE");
+        $sheet->setCellValue("A2", $xmlElem->hidden_title);
+        $sheet->setCellValue("B1", "NAME");
+        $sheet->setCellValue("B2", $xmlElem->name);
+        $sheet->setCellValue("C1", "NACHNAME");
+        $sheet->setCellValue("C2", $xmlElem->nachname);
+        $sheet->setCellValue("D1", "STRASSE");
+        $sheet->setCellValue("D2", $xmlElem->strasse);
+        $sheet->setCellValue("E1", "PLZ");
+        $sheet->setCellValue("E2", $xmlElem->plz);
+        $sheet->setCellValue("F1", "CITY");
+        $sheet->setCellValue("F2", $xmlElem->city);
+        $sheet->setCellValue("G1", "PHONE");
+        $sheet->setCellValue("G2", $xmlElem->phone);
+        $sheet->setCellValue("H1", "EMAIL");
+        $sheet->setCellValue("H2", $xmlElem->email);
+        $sheet->setCellValue("I1", "BEMERKUNGEN");
+        $sheet->setCellValue("I2", $xmlElem->bemerkungen);
+        $sheet->setCellValue("J1", "BEDARF");
+        $sheet->setCellValue("J2", $xmlElem->bedarf);
+        $sheet->setCellValue("K1", "HIDDEN_URL");
+        $sheet->setCellValue("K2", $xmlElem->hidden_url);
+
+        $sheet->getColumnDimension("A")->setAutoSize(true);
+        $sheet->getColumnDimension("B")->setAutoSize(true);
+        $sheet->getColumnDimension("C")->setAutoSize(true);
+        $sheet->getColumnDimension("D")->setAutoSize(true);
+        $sheet->getColumnDimension("E")->setAutoSize(true);
+        $sheet->getColumnDimension("F")->setAutoSize(true);
+        $sheet->getColumnDimension("G")->setAutoSize(true);
+        $sheet->getColumnDimension("H")->setAutoSize(true);
+        $sheet->getColumnDimension("I")->setAutoSize(true);
+        $sheet->getColumnDimension("J")->setAutoSize(true);
+        $sheet->getColumnDimension("K")->setAutoSize(true);
+
+        $writer = new Xls($spreadsheet);
+        @$writer->save($fileName);
+
+    }
+
+    /**
      * Wysłanie danych na serwer FTP
      * @param string $url
      * @param string $content
@@ -62,38 +117,12 @@ class XmlToTxtConverter {
     }
 
     /**
-     * Wysłanie danych na serwer FTP
-     * @param string $ftpServer
-     * @param string $ftpUser
-     * @param string $ftpPass
-     * @param string $fileName
-     * @param string $content
-     * @return bool
-     */
-//     private function exportToFtp($ftpServer, $ftpUser, $ftpPass, $fileName, $content) {
-//         $conn = ftp_connect($ftpServer);
-//         $loginRes = ftp_login($conn, $ftpUser, $ftpPass);
-//         if (!$conn || !$loginRes) {
-//             return false;
-//         }
-
-//         $upload = ftp_put($conn, 'krystianswitala.cba.pl/'.$fileName, $fileName, FTP_BINARY);
-//         if (!$upload) {
-//             return false;
-//         }
-
-//         ftp_close($conn);
-
-//         return true;
-//     }
-
-    /**
      * Funkcja główna
      */
     static function main() {
         $conv = new XmlToTxtConverter();
         $xmlElement = $conv->loadXMLFile(XmlToTxtConverter::XML_FILE_NAME);
-    //     var_dump($xmlElement);
+//         var_dump($xmlElement);
 
         if ($xmlElement !== null) {
             $txtStr = $conv->xmlToTxtConversion($xmlElement);
@@ -101,8 +130,8 @@ class XmlToTxtConverter {
 
             // Zapis danych...
             @file_put_contents(XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... do pliku na lokalnym dysku
-//             $conv->exportToFtp(XmlToTxtConverter::FTP_SERVER, XmlToTxtConverter::FTP_USER, XmlToTxtConverter::FTP_PASS, XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
-            $conv->exportToFtp('ftp://krystianswitala:***@cba.pl/krystianswitala.cba.pl/'.XmlToTxtConverter::TXT_FILE_NAME, $txtStr);
+//             $conv->exportToFtp('ftp://krystianswitala:***@cba.pl/krystianswitala.cba.pl/'.XmlToTxtConverter::TXT_FILE_NAME, $txtStr); // ... na serwer FTP
+            $conv->exportToXlsFile($xmlElement, XmlToTxtConverter::TXT_FILE_NAME.".xls");
 
             // Kasowanie pliku wynikowego
 //             @unlink(XmlToTxtConverter::TXT_FILE_NAME);
